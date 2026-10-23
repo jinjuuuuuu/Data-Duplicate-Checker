@@ -1,0 +1,8 @@
+pandas>=1.3
+numpy>=1.20
+pillow>=9.0
+openpyxl>=3.0
+# 선택: .parquet 파일을 검사해야 할 때만 설치하세요 (EXE 용량이 크게 늘어납니다)
+# pyarrow>=10.0
+# 선택: 구형 .xls 파일을 읽어야 할 때
+# xlrd>=2.0
