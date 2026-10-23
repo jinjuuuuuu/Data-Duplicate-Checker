@@ -51,40 +51,31 @@ AI 시스템 성능시험에서 학습에 쓴 데이터가 시험데이터에 �
 
 ## 시작하기
 
-**이 저장소에는 실행파일이 들어 있지 않습니다.** 용량이 71MB라 소스와 함께 두지 않았습니다. 아래 둘 중 하나로 시작하세요.
+실행파일은 저장소에 없습니다(71MB). 아래 순서로 직접 만듭니다. Windows 와 인터넷 연결이 필요합니다.
 
-### 방법 1 — 실행파일 만들기
+**1. 저장소 내려받기**
 
-Windows PC 에 **Python 3.9 이상**과 인터넷 연결이 필요합니다. 저장소를 받은 뒤:
+이 페이지 위쪽 초록색 **Code** 버튼 → **Download ZIP** → 받은 파일 압축 풀기
 
-```
-build_exe.bat
-```
+**2. Python 설치** (이미 있으면 넘어가기)
 
-더블클릭하면 필요한 패키지를 설치하고 실행파일을 만듭니다. 5~10분 걸립니다. 끝나면 `dist\데이터중복성검사기.exe` 가 생깁니다.
+[python.org](https://www.python.org/downloads/) 에서 받아 설치합니다. 설치 화면 아래 **Add Python to PATH** 를 꼭 체크하세요.
 
-만들어진 EXE 하나만 복사하면 **Python 이 없는 PC 에서도** 돌아갑니다. 업체 PC 에 전달할 때 이걸 씁니다.
+**3. 실행파일 만들기**
 
-- Python 을 못 찾는다고 나오면 `diagnose.bat` 을 실행해 보세요. 설치된 Python 목록과 선택 결과를 보여줍니다.
-- `[WinError 5]` 로 실패하면 `build` 폴더를 지우고 다시 실행하세요. OneDrive 같은 동기화 폴더에서 자주 생깁니다.
+압축 푼 폴더에서 `build_exe.bat` 을 더블클릭합니다. 5~10분 걸립니다.
 
-### 방법 2 — 빌드 없이 바로 실행
+**4. 실행**
 
-Python 3.9 이상이 있다면 바로 띄울 수 있습니다.
+만들어진 `dist\데이터중복성검사기.exe` 를 더블클릭합니다.
 
-```
-run.bat
-```
+> 이 EXE 하나만 복사하면 **Python 이 없는 PC 에서도** 돌아갑니다. 업체 PC 에 전달할 때 이 파일을 쓰세요.
 
-필요한 패키지(pandas, numpy, pillow, openpyxl)가 없으면 처음 실행할 때 알아서 설치합니다.
+**잘 안 되면**
 
-다만 이 방식은 **parquet 과 구형 xls 는 읽지 못합니다.** 그 두 형식까지 쓰려면 한 줄 더 실행하세요.
-
-```
-pip install pyarrow xlrd
-```
-
-방법 1로 만든 EXE 에는 둘 다 처음부터 들어 있습니다.
+- Python 을 못 찾는다고 나오면 → `diagnose.bat` 더블클릭
+- `[WinError 5]` 오류 → `build` 폴더를 지우고 다시 시도 (OneDrive 폴더에서 자주 생깁니다)
+- Python 이 이미 있다면 `run.bat` 으로 빌드 없이 바로 띄울 수도 있습니다. 단 이 방식은 parquet·구형 xls 를 읽지 못하므로 `pip install pyarrow xlrd` 가 추가로 필요합니다.
 
 ---
 
@@ -106,48 +97,20 @@ pip install pyarrow xlrd
 python cli.py --train <학습폴더> --test <시험폴더> --out <리포트폴더>
 ```
 
-자주 쓰는 선택지:
-
-| 옵션 | 기본값 | 설명 |
-|---|---|---|
-| `--decimals` | 4 | 수치 허용오차(소수점 자리) |
-| `--text-sim` | 0.80 | 텍스트 유사도 임계값 |
-| `--image-hamming` | 5 | 이미지 해밍거리 임계값 |
-| `--exclude` | | 제외할 컬럼(쉼표 구분) |
-| `--keys` | | 이 컬럼만 비교(쉼표 구분) |
-| `--no-near` | | 근사 중복 검사 끄기 |
-
-전체 목록은 `python cli.py --help` 로 볼 수 있습니다.
+임계값과 컬럼 설정도 옵션으로 줄 수 있습니다. `python cli.py --help` 참고.
 
 ---
 
 ## 검증
 
-검사기가 맞게 판정하는지 확인하는 도구가 들어 있습니다.
+검사기가 맞게 판정하는지 확인하는 도구가 `tests/` 에 있습니다. 중복을 의도적으로 심은 데이터를 만들고, 몇 건이 잡혀야 하는지 기대값을 먼저 확정한 뒤 실제 결과와 대조합니다. **생성과 대조가 한 쌍**입니다.
 
 ```
-python tests/make_format_samples.py <폴더>      확장자별 검증 데이터 생성
-python tests/verify_format_samples.py <폴더>    기대값과 자동 대조
+python tests/make_format_samples.py <폴더>      확장자별 데이터 생성
+python tests/verify_format_samples.py <폴더>    기대값과 대조
 ```
 
-확장자마다 완전일치·근사중복을 의도적으로 심은 데이터를 만들고, 몇 건이 잡혀야 하는지 기대값을 먼저 확정한 뒤 실제 결과와 대조합니다.
-
-대량 데이터가 필요하면:
-
-```
-python tests/make_bulk_samples.py <폴더>        확장자당 1000단위
-python tests/run_bulk_report.py <폴더>          검사 후 결과 문서 생성
-```
-
-그 밖에:
-
-```
-python tests/make_sample.py <폴더>              소규모 합성 데이터
-python tests/test_engine.py <폴더>              엔진 단위 검증
-python tests/gui_smoke.py                       창이 뜨는지 확인
-```
-
-검증 도구는 **생성 ↔ 대조가 한 쌍**입니다. `make_*` 로 중복을 심은 데이터를 만들고, 몇 건이 잡혀야 하는지 기대값을 먼저 확정한 뒤, `verify_*` · `test_engine` 으로 실제 결과와 맞춰 봅니다.
+대량으로 보려면 `make_bulk_samples.py` (확장자당 1000단위) → `run_bulk_report.py` 를 쓰고, 그 밖에 `make_sample.py` → `test_engine.py`, `gui_smoke.py` 가 있습니다.
 
 ---
 
