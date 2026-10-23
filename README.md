@@ -99,6 +99,16 @@ python tests/make_bulk_samples.py <폴더>        확장자당 1000단위
 python tests/run_bulk_report.py <폴더>          검사 후 결과 문서 생성
 ```
 
+그 밖에:
+
+```
+python tests/make_sample.py <폴더>              소규모 합성 데이터
+python tests/test_engine.py <폴더>              엔진 단위 검증
+python tests/gui_smoke.py                       창이 뜨는지 확인
+```
+
+검증 도구는 **생성 ↔ 대조가 한 쌍**입니다. `make_*` 로 중복을 심은 데이터를 만들고, 몇 건이 잡혀야 하는지 기대값을 먼저 확정한 뒤, `verify_*` · `test_engine` 으로 실제 결과와 맞춰 봅니다.
+
 ---
 
 ## 폴더 구성
